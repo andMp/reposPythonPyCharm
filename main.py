@@ -97,7 +97,7 @@ def main():
             print("Zaversenna roboti!")
             break
         else:
-            print("Ne virno! Sprobuy znov!")
+            print("Ne virniy variant! Sprobuy znov!")
 
 if __name__ == "__main__":
     main()
