@@ -106,7 +106,6 @@ class Gra:
         except KeyboardInterrupt:
             print("\nVihid z gri.")
 
-
 if __name__ == "__main__":
     game = Gra()
     game.proces()
