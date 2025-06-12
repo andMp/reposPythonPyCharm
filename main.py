@@ -125,7 +125,7 @@ class Bibka:
         self.__nomNewKn = 1
 
     def regCh(self):
-        name = input("Введіть ім'я нового відвідувача: ").strip()
+        name = input("Vvedit ima novogo vidviduvaca: ").strip()
         if len(name) < 1:
             print("Ima ne povynna buty porozhnoiu!")
         else:
