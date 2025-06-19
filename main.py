@@ -8,5 +8,5 @@ def main():
     controller = Biblioteka_controller(view)
     controller.run()
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
