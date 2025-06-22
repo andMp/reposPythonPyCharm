@@ -1,19 +1,20 @@
-<h1>Доска объявлений</h1>
-<nav>
-    Категории:
-    {% for cat in categories %}
-      <a href="{% url 'ads_by_category' cat.id %}">{{ cat.name }}</a>
-    {% endfor %}
-    | <a href="{% url 'create_ad' %}">Создать объявление</a>
-</nav>
+{% extends 'main/base.html' %}
 
-{% for category, ads_list in ads_by_cat.items %}
-  <h2>{{ category.name }}</h2>
-  <ul>
-    {% for ad in ads_list %}
-      <li><a href="{% url 'ad_detail' ad.id %}">{{ ad.title }}</a> ({{ ad.pub_date.date }})</li>
-    {% empty %}
-      <li>Объявлений нет</li>
-    {% endfor %}
-  </ul>
-{% endfor %}
+{% block title %}Головна — Дошка оголошень{% endblock %}
+
+{% block content %}
+  {% for category, ads_list in ads_by_cat.items %}
+    <h2>{{ category.name }}</h2>
+    <ul>
+      {% for ad in ads_list %}
+        <li>
+          <a href="{% url 'ad_detail' ad.id %}">{{ ad.title }}</a>
+          <br>
+          <small>{{ ad.pub_date.date }}</small>
+        </li>
+      {% empty %}
+        <li class="no-ads">Оголошення відсутні</li>
+      {% endfor %}
+    </ul>
+  {% endfor %}
+{% endblock %}

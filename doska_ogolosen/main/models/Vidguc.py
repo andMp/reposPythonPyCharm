@@ -1,4 +1,6 @@
+from django import forms
+
 class Vidguc:
-    def __init__(self, vidguc):
-        name = forms.CharField(label='Имя', max_length=50)
-        message = forms.CharField(label='Сообщение', widget=forms.Textarea)
+    def __init__(self, name, message):
+        self.name = name
+        self.message = message

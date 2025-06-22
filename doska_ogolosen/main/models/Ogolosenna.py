@@ -1,3 +1,5 @@
+from datetime import datetime
+
 class Ogolosenna:
     def __init__(self, id, title, description, pub_date, category):
         self.id = id

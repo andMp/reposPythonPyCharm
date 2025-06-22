@@ -1,0 +1,13 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Створити оголошення{% endblock %}
+
+{% block content %}
+  <h1>Створити оголошення</h1>
+  <form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Створити</button>
+  </form>
+  <p><a href="{% url 'index' %}">На головну</a></p>
+{% endblock %}
