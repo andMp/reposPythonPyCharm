@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Додати оголошення{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Додати нове оголошення</h1>
+
+<div class="row">
+    <div class="col-md-8 offset-md-2">
+        <div class="card p-4 shadow-sm">
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-success w-100">Опублікувати</button>
+            </form>
+            <a href="{% url 'carad_list' %}" class="btn btn-outline-secondary mt-3 w-100">← Назад до оголошень</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

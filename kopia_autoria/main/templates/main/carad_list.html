@@ -1,28 +1,37 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Оголошення авто</title>
-</head>
-<body>
-    <h1>Оголошення авто</h1>
+{% extends 'main/base.html' %}
 
-    <form method="get">
-        {{ form.as_p }}
-        <button type="submit">Фільтрувати</button>
-    </form>
+{% block title %}Оголошення авто{% endblock %}
 
-    <a href="{% url 'carad_create' %}">Додати оголошення</a>
+{% block content %}
+<h1 class="mb-4">Оголошення авто</h1>
 
-    <hr>
-
-    {% for ad in ads %}
-        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
-            <h3>{{ ad.brand }} {{ ad.model }} ({{ ad.year }})</h3>
-            <p>Ціна: {{ ad.price }} грн</p>
-            <p>{{ ad.description|linebreaks }}</p>
+<div class="row">
+    <!-- Фільтри -->
+    <div class="col-md-4 mb-4">
+        <div class="card shadow-sm p-3">
+            <h5>Фільтр пошуку</h5>
+            <form method="get">
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary w-100">Знайти</button>
+            </form>
+            <a href="{% url 'carad_create' %}" class="btn btn-success w-100 mt-3">+ Додати оголошення</a>
         </div>
-    {% empty %}
-        <p>Оголошень не знайдено.</p>
-    {% endfor %}
-</body>
-</html>
+    </div>
+
+    <!-- Оголошення -->
+    <div class="col-md-8">
+        {% for ad in ads %}
+            <div class="card mb-3 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">{{ ad.brand|title }} {{ ad.model }} ({{ ad.year }})</h5>
+                    <h6 class="card-subtitle mb-2 text-muted">Ціна: {{ ad.price }} грн</h6>
+                    <p class="card-text">{{ ad.description|truncatechars:150 }}</p>
+                    <p class="text-end mb-0"><small class="text-muted">Додано {{ ad.created_at|date:"d.m.Y H:i" }}</small></p>
+                </div>
+            </div>
+        {% empty %}
+            <p class="text-muted">Оголошень не знайдено.</p>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

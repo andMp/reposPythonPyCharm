@@ -12,4 +12,3 @@ class CarAdFilterForm(forms.Form):
     year_max = forms.IntegerField(required=False, label='Рік до')
     price_min = forms.IntegerField(required=False, label='Ціна від')
     price_max = forms.IntegerField(required=False, label='Ціна до')
-
