@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Оголошення авто</title>
+</head>
+<body>
+    <h1>Оголошення авто</h1>
+
+    <form method="get">
+        {{ form.as_p }}
+        <button type="submit">Фільтрувати</button>
+    </form>
+
+    <a href="{% url 'carad_create' %}">Додати оголошення</a>
+
+    <hr>
+
+    {% for ad in ads %}
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+            <h3>{{ ad.brand }} {{ ad.model }} ({{ ad.year }})</h3>
+            <p>Ціна: {{ ad.price }} грн</p>
+            <p>{{ ad.description|linebreaks }}</p>
+        </div>
+    {% empty %}
+        <p>Оголошень не знайдено.</p>
+    {% endfor %}
+</body>
+</html>

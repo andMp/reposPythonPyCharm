@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ course.title }}</title>
+</head>
+<body>
+    <h1>{{ course.title }}</h1>
+    <p><strong>Автор:</strong> {{ course.author }}</p>
+    <p><strong>Складність:</strong> {{ course.get_difficulty_display }}</p>
+    <p><strong>Дата публікації:</strong> {{ course.published_date }}</p>
+    <hr>
+    <p>{{ course.description }}</p>
+    <a href="{% url 'course_list' %}">← Назад</a>
+</body>
+</html>
