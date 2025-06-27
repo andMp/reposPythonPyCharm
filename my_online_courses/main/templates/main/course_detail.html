@@ -1,15 +1,16 @@
+{% load static %}
 <!DOCTYPE html>
 <html>
 <head>
     <title>{{ course.title }}</title>
+    <link rel="stylesheet" href="{% static 'main/styles.css' %}">
 </head>
 <body>
     <h1>{{ course.title }}</h1>
     <p><strong>Автор:</strong> {{ course.author }}</p>
-    <p><strong>Складність:</strong> {{ course.get_difficulty_display }}</p>
-    <p><strong>Дата публікації:</strong> {{ course.published_date }}</p>
-    <hr>
-    <p>{{ course.description }}</p>
-    <a href="{% url 'course_list' %}">← Назад</a>
+    <p><strong>Складність:</strong> {{ course.get_level_display }}</p>
+    <p><strong>Дата публікації:</strong> {{ course.date_published }}</p>
+    <p>{{ course.full_description }}</p>
+    <a href="{% url 'home' %}">Назад</a>
 </body>
 </html>

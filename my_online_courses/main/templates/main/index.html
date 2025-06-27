@@ -1,0 +1,22 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Курси</title>
+    <link rel="stylesheet" href="{% static 'main/styles.css' %}">
+</head>
+<body>
+    <h1>Список курсів</h1>
+    <ul>
+        {% for course in courses %}
+            <li>
+                <h2>{{ course.title }}</h2>
+                <p>{{ course.short_description|truncatechars:100 }}</p>
+                <p><strong>Автор:</strong> {{ course.author }}</p>
+                <p><strong>Дата:</strong> {{ course.date_published }}</p>
+                <a href="{% url 'course_detail' course.pk %}">Детальніше</a>
+            </li>
+        {% endfor %}
+    </ul>
+</body>
+</html>
