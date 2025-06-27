@@ -1,4 +1,79 @@
+{#{% extends 'main/base.html' %}#}
+{#{% block title %}Додати оголошення{% endblock %}#}
+{#{% block content %}#}
+{#<h1 class="mb-4">Додати нове оголошення</h1>#}
+{##}
+{#<div class="row">#}
+{#    <div class="col-md-8 offset-md-2">#}
+{#        <div class="card p-4 shadow-sm">#}
+{#            <form method="post">#}
+{#                {% csrf_token %}#}
+{#                {{ form.as_p }}#}
+{#                <button type="submit" class="btn btn-success w-100">Опублікувати</button>#}
+{#            </form>#}
+{#            <a href="{% url 'carad_list' %}" class="btn btn-outline-secondary mt-3 w-100">← Назад до оголошень</a>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{#{% endblock %}#}
+{##}
+{##}
+{#{% extends 'main/base.html' %}#}
+{#{% block title %}Додати оголошення{% endblock %}#}
+{#{% block content %}#}
+{#<h1 class="mb-4">Додати нове оголошення</h1>#}
+{##}
+{#<div class="row">#}
+{#    <div class="col-md-8 offset-md-2">#}
+{#        <div class="card p-4 shadow-sm">#}
+{#            <form method="post">#}
+{#                {% csrf_token %}#}
+{#                <div class="mb-3">#}
+{#                    {{ form.brand.label_tag }}#}
+{#                    {{ form.brand }}#}
+{#                </div>#}
+{##}
+{#                <div class="mb-3" id="new-brand-field" style="display: none;">#}
+{#                    {{ form.new_brand.label_tag }}#}
+{#                    {{ form.new_brand }}#}
+{#                </div>#}
+{##}
+{#                {{ form.model.label_tag }}#}
+{#                {{ form.model }}#}
+{#                {{ form.year.label_tag }}#}
+{#                {{ form.year }}#}
+{#                {{ form.price.label_tag }}#}
+{#                {{ form.price }}#}
+{#                {{ form.description.label_tag }}#}
+{#                {{ form.description }}#}
+{##}
+{#                <button type="submit" class="btn btn-success w-100 mt-3">Опублікувати</button>#}
+{#            </form>#}
+{#            <a href="{% url 'carad_list' %}" class="btn btn-outline-secondary mt-3 w-100">← Назад</a>#}
+{#        </div>#}
+{#    </div>#}
+{#</div>#}
+{##}
+{#<script>#}
+{#    const brandSelect = document.getElementById("id_brand");#}
+{#    const newBrandField = document.getElementById("new-brand-field");#}
+{##}
+{#    function toggleNewBrand() {#}
+{#        const value = brandSelect.value;#}
+{#        if (!value) {#}
+{#            newBrandField.style.display = 'block';#}
+{#        } else {#}
+{#            newBrandField.style.display = 'none';#}
+{#        }#}
+{#    }#}
+{#    brandSelect.addEventListener("change", toggleNewBrand);#}
+{#    document.addEventListener("DOMContentLoaded", toggleNewBrand);#}
+{#</script>#}
+{#{% endblock %}#}
+
 {% extends 'main/base.html' %}
+{% load form_filters %}
+
 
 {% block title %}Додати оголошення{% endblock %}
 
@@ -10,11 +85,66 @@
         <div class="card p-4 shadow-sm">
             <form method="post">
                 {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="btn btn-success w-100">Опублікувати</button>
+
+                <!-- Поле: brand -->
+                <div class="mb-3">
+                    {{ form.brand.label_tag }}
+                    {{ form.brand|add_class:"form-select" }}
+                </div>
+
+                <!-- Поле: new_brand -->
+                <div class="mb-3" id="new-brand-field" style="display: none;">
+                    {{ form.new_brand.label_tag }}
+                    {{ form.new_brand|add_class:"form-control" }}
+                </div>
+
+                <!-- Поле: model -->
+                <div class="mb-3">
+                    {{ form.model.label_tag }}
+                    {{ form.model|add_class:"form-control" }}
+                </div>
+
+                <!-- Поле: year -->
+                <div class="mb-3">
+                    {{ form.year.label_tag }}
+                    {{ form.year|add_class:"form-control" }}
+                </div>
+
+                <!-- Поле: price -->
+                <div class="mb-3">
+                    {{ form.price.label_tag }}
+                    {{ form.price|add_class:"form-control" }}
+                </div>
+
+                <!-- Поле: description -->
+                <div class="mb-3">
+                    {{ form.description.label_tag }}
+                    {{ form.description|add_class:"form-control" }}
+                </div>
+
+                <button type="submit" class="btn btn-success w-100 mt-3">Опублікувати</button>
             </form>
-            <a href="{% url 'carad_list' %}" class="btn btn-outline-secondary mt-3 w-100">← Назад до оголошень</a>
+
+            <a href="{% url 'carad_list' %}" class="btn btn-outline-secondary mt-3 w-100">← Назад</a>
         </div>
     </div>
 </div>
+
+<!-- JS: показ поля "Інша марка" -->
+<script>
+    const brandSelect = document.getElementById("id_brand");
+    const newBrandField = document.getElementById("new-brand-field");
+
+    function toggleNewBrand() {
+        const value = brandSelect.value;
+        if (!value) {
+            newBrandField.style.display = 'block';
+        } else {
+            newBrandField.style.display = 'none';
+        }
+    }
+
+    brandSelect.addEventListener("change", toggleNewBrand);
+    document.addEventListener("DOMContentLoaded", toggleNewBrand);
+</script>
 {% endblock %}
