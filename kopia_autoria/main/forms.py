@@ -1,5 +1,7 @@
 from django import forms
 from .models import CarAd, Brand
+from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.models import User
 
 class CarAdForm(forms.ModelForm):
     new_brand = forms.CharField(
@@ -49,3 +51,9 @@ class CarAdFilterForm(forms.Form):
     year_max = forms.IntegerField(required=False, label='Рік до')
     price_min = forms.IntegerField(required=False, label='Ціна від')
     price_max = forms.IntegerField(required=False, label='Ціна до')
+
+class RegisterForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+    class Meta:
+        model = User
+        fields = ['username', 'email', 'password1', 'password2']

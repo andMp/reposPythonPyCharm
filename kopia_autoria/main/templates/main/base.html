@@ -7,6 +7,18 @@
 </head>
 <body class="bg-light">
     <div class="container py-4">
+
+        <nav class="mb-4 text-end">
+            {% if user.is_authenticated %}
+                Привіт, <strong>{{ user.username }}</strong> |
+                <a href="{% url 'profile' %}" class="btn btn-sm btn-outline-primary">Кабінет</a>
+                <a href="{% url 'logout' %}" class="btn btn-sm btn-outline-danger">Вийти</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-sm btn-outline-primary">Увійти</a>
+                <a href="{% url 'register' %}" class="btn btn-sm btn-outline-success">Реєстрація</a>
+            {% endif %}
+        </nav>
+
         {% block content %}
         {% endblock %}
     </div>
