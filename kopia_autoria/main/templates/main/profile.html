@@ -3,13 +3,17 @@
 {% block title %}Профіль{% endblock %}
 
 {% block content %}
-<h2>Особистий кабінет</h2>
-<p>Привіт, {{ user.username }}!</p>
-<a href="{% url 'logout' %}" class="btn btn-danger">Вийти</a>
-{#<form method="post" action="{% url 'logout' %}">#}
-{#    {% csrf_token %}#}
-{#    <button type="submit" class="btn btn-danger">Вийти</button>#}
-{#</form>#}
+    <h2>Особистий кабінет</h2>
+    <p>Привіт, {{ user.username }}!</p>
+{#    <a href="{% url 'logout' %}" class="btn btn-danger">Вийти</a>#}
+    <form method="post" action="{% url 'logout' %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Вийти</button>
+    </form>
 
+{#    <form method="post" action="{% url 'logout' %}" style="display: inline;">#}
+{#        {% csrf_token %}#}
+{#        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Вийти</button>#}
+{#    </form>#}
 
 {% endblock %}
