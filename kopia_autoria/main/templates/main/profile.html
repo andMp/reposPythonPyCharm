@@ -1,19 +1,36 @@
 {% extends 'main/base.html' %}
-
 {% block title %}Профіль{% endblock %}
-
 {% block content %}
-    <h2>Особистий кабінет</h2>
-    <p>Привіт, {{ user.username }}!</p>
-{#    <a href="{% url 'logout' %}" class="btn btn-danger">Вийти</a>#}
-    <form method="post" action="{% url 'logout' %}">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Вийти</button>
-    </form>
+<h2>Кабінет: {{ user.username }}</h2>
 
-{#    <form method="post" action="{% url 'logout' %}" style="display: inline;">#}
-{#        {% csrf_token %}#}
-{#        <button type="submit" class="btn btn-link p-0 m-0 align-baseline">Вийти</button>#}
-{#    </form>#}
+<h3 class="mt-4">Мої оголошення</h3>
+    <a href="{% url 'carad_create' %}" class="btn btn-success my-3 w-25">+ Додати оголошення</a>
+<ul>
+    {% for ad in my_ads %}
+        <li>
+            <strong>{{ ad.brand }} {{ ad.model }}</strong> - {{ ad.price }} грн
+            <a href="{% url 'carad_edit' ad.pk %}" class="btn btn-sm btn-outline-primary">Редагувати</a>
+        </li>
+    {% empty %}
+        <li class="text-muted">Ще немає оголошень.</li>
+    {% endfor %}
+</ul>
 
+<h3 class="mt-4">Історія перегляду (за 24 години)</h3>
+<ul>
+    {% for view in recent_views %}
+        <li>{{ view.carad.brand }} {{ view.carad.model }} ({{ view.timestamp|date:"H:i" }})</li>
+    {% empty %}
+        <li class="text-muted">Немає переглядів.</li>
+    {% endfor %}
+</ul>
+
+<h3 class="mt-4">Обране</h3>
+<ul>
+    {% for fav in fav_ads %}
+        <li>{{ fav.carad.brand }} {{ fav.carad.model }}</li>
+    {% empty %}
+        <li class="text-muted">Ще нічого не додано в обране.</li>
+    {% endfor %}
+</ul>
 {% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %}
+
+{% block title %}Оголошення: {{ ad.brand }} {{ ad.model }}{% endblock %}
+
+{% block content %}
+<h2>{{ ad.brand }} {{ ad.model }} ({{ ad.year }})</h2>
+<p>Ціна: {{ ad.price }} грн</p>
+<p>{{ ad.description }}</p>
+
+{% if user.is_authenticated %}
+    <form method="post" action="{% url 'add_favorite' ad.pk %}">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-outline-warning">☆ Додати в обране</button>
+    </form>
+{% else %}
+    <p><a href="{% url 'login' %}">Увійдіть</a>, щоб додати в обране</p>
+{% endif %}
+
+<a href="{% url 'carad_list' %}">← Назад до списку</a>
+{% endblock %}
