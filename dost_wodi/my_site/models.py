@@ -13,4 +13,4 @@ class Zamovl(models.Model):
     coment=models.TextField(blank=True, null=True)
 
     def __str__(self):
-        return self.chas_stvor
+        return self.chas_stvor.strftime("%Y-%m-%d %H:%M:%S")
