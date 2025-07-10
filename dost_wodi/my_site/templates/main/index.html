@@ -6,9 +6,58 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.inputmask/5.0.7/jquery.inputmask.min.js"></script>
+    <style>
+        body {
+            display: flex;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #0d6efd;
+            color: white;
+            padding: 20px;
+        }
+        .sidebar h4 {
+            color: #fff;
+            margin-bottom: 1rem;
+        }
+        .sidebar a {
+            display: block;
+            color: #cce5ff;
+            margin-bottom: 0.5rem;
+            text-decoration: none;
+        }
+        .sidebar a:hover {
+            color: #ffffff;
+            text-decoration: underline;
+        }
+        .content {
+            flex-grow: 1;
+            padding: 2rem;
+            background-color: #f8f9fa;
+        }
+        td button {
+            vertical-align: middle !important;
+        }
+        td.action-cell {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            gap: 0.25rem;
+        }
+    </style>
 </head>
 <body>
-<div class="container my-4">
+<div class="sidebar">
+    <h4>Меню</h4>
+    <a href="#">🏠 Головна</a>
+    <a href="#">📦 Замовлення</a>
+    <a href="#">👤 Користувачі</a>
+    <a href="#">⚙️ Налаштування</a>
+</div>
+<div class="content">
     <h2 class="mb-4">📦 Доставка води:</h2>
 
     <div class="row g-2 mb-3">
@@ -53,8 +102,8 @@
         </thead>
         <tbody id="zamovlTableBody">
         <tr id="formRow">
-            <td>—</td>
-            <td>авто</td>
+            <td class="align-middle">—</td>
+            <td class="align-middle">авто</td>
             <td><input type="datetime-local" id="chas_dost" class="form-control form-control-sm"></td>
             <td>
                 <select id="stat" class="form-select form-select-sm">
@@ -67,7 +116,7 @@
             <td><input type="text" id="vidpov" class="form-control form-control-sm"></td>
             <td><input type="number" id="suma" class="form-control form-control-sm" step="0.01" min="0"></td>
             <td><input type="text" id="coment" class="form-control form-control-sm"></td>
-            <td>
+            <td class="action-cell">
                 <button class="btn btn-sm btn-success" onclick="addZamovl()">➕</button>
             </td>
         </tr>
@@ -78,8 +127,8 @@
 <script>
     const apiUrl = "/api/my_site/";
 
-    function applyPhoneMask() {
-        $("#tel").inputmask("+38 (999) 999-99-99");
+    function applyPhoneMaskTo(element) {
+        $(element).inputmask("+38 (999) 999-99-99");
     }
 
     function cleanPhone(raw) {
@@ -87,89 +136,94 @@
     }
 
     function loadData() {
-        fetch(apiUrl)
-            .then(res => res.json())
-            .then(data => {
-                const tbody = document.getElementById("zamovlTableBody");
-                const formClone = document.getElementById("formRow").cloneNode(true);
-                tbody.innerHTML = "";
-                tbody.appendChild(formClone);
-                applyPhoneMask();
+    fetch(apiUrl)
+        .then(res => res.json())
+        .then(data => {
+            console.log("Отримані дані:", data);
 
-                const filterStat = document.getElementById("filterStat").value;
-                const sortBy = document.getElementById("sortBy").value;
-                const filterVidpov = document.getElementById("filterVidpov").value;
-                const vidpovSet = new Set();
+            const tbody = document.getElementById("zamovlTableBody");
+            const formClone = document.getElementById("formRow").cloneNode(true);
+            tbody.innerHTML = "";
+            tbody.appendChild(formClone);
+            applyPhoneMaskTo("#tel");
 
-                if (sortBy) {
-                    data.sort((a, b) => a[sortBy] > b[sortBy] ? 1 : -1);
-                }
+            const filterStatEl = document.getElementById("filterStat");
+            const sortByEl = document.getElementById("sortBy");
+            const filterVidpovEl = document.getElementById("filterVidpov");
 
-                data.forEach(item => {
-                    if (filterStat !== "" && String(item.stat) !== filterStat) return;
-                    if (filterVidpov && item.vidpov !== filterVidpov) return;
-                    if (item.vidpov) vidpovSet.add(item.vidpov);
+            const filterStat = filterStatEl ? filterStatEl.value : "";
+            const sortBy = sortByEl ? sortByEl.value : "";
+            const filterVidpov = filterVidpovEl ? filterVidpovEl.value : "";
+            const vidpovSet = new Set();
 
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${item.id}</td>
-                        <td>${new Date(item.chas_stvor).toLocaleString()}</td>
-                        <td>${new Date(item.chas_dost).toLocaleString()}</td>
-                        <td>${item.stat ? '<span class="badge bg-success">Завершено</span>' : '<span class="badge bg-warning text-dark">Незавершено</span>'}</td>
-                        <td>${item.tel}</td>
-                        <td>${item.adresa}</td>
-                        <td>${item.vidpov}</td>
-                        <td>${item.suma} ₴</td>
-                        <td>${item.coment || '—'}</td>
-                        <td>
-                            <button class="btn btn-sm btn-primary me-1" onclick="editZamovl(${item.id})">✏️</button>
-                            <button class="btn btn-sm btn-danger" onclick="deleteZamovl(${item.id})">🗑</button>
-                        </td>
-                    `;
-                    tbody.appendChild(row);
-                });
+            if (sortBy) {
+                data.sort((a, b) => (a[sortBy] > b[sortBy] ? 1 : -1));
+            }
 
-                const vidpovSelect = document.getElementById("filterVidpov");
-                vidpovSelect.innerHTML = '<option value="">Фільтр: Відповідальний</option>';
+            data.forEach(item => {
+                if (filterStat !== "" && String(item.stat) !== filterStat) return;
+                if (filterVidpov && item.vidpov !== filterVidpov) return;
+                if (item.vidpov) vidpovSet.add(item.vidpov);
+
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${item.id}</td>
+                    <td>${new Date(item.chas_stvor).toLocaleString()}</td>
+                    <td>${new Date(item.chas_dost).toLocaleString()}</td>
+                    <td>${item.stat ?
+                        '<span class="badge bg-success">Завершено</span>' :
+                        '<span class="badge bg-warning text-dark">Незавершено</span>'}
+                    </td>
+                    <td>${item.tel}</td>
+                    <td>${item.adresa}</td>
+                    <td>${item.vidpov}</td>
+                    <td>${item.suma} ₴</td>
+                    <td>${item.coment || '—'}</td>
+                    <td class="action-cell">
+                        <button class="btn btn-sm btn-primary me-1" onclick='showEditRow(${item.id}, ${JSON.stringify(item).replace(/"/g, "&quot;")})'>✏️</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteZamovl(${item.id})">🗑</button>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            if (filterVidpovEl) {
+                filterVidpovEl.innerHTML = '<option value="">Фільтр: Відповідальний</option>';
                 [...vidpovSet].sort().forEach(name => {
                     const opt = document.createElement("option");
                     opt.value = name;
                     opt.textContent = name;
-                    vidpovSelect.appendChild(opt);
+                    filterVidpovEl.appendChild(opt);
                 });
-            });
-    }
+            }
+        })
+        .catch(err => {
+            console.error("❌ Помилка при завантаженні:", err);
+            alert("Не вдалося завантажити дані з сервера");
+        });
+}
 
-    function getFormData() {
-        return {
-            tel: cleanPhone(document.getElementById("tel").value.trim()),
-            adresa: document.getElementById("adresa").value.trim(),
-            suma: parseFloat(document.getElementById("suma").value),
-            chas_dost: document.getElementById("chas_dost").value,
-            coment: document.getElementById("coment").value.trim(),
-            vidpov: document.getElementById("vidpov").value.trim(),
-            stat: document.getElementById("stat").value === "true"
-        };
-    }
 
     function addZamovl() {
-        const data = getFormData();
-        if (!data.tel.match(/^\+38\d{10}$/)) return alert("📞 Невірний номер телефону");
-        if (!data.adresa) return alert("📍 Вкажіть адресу");
-        if (!data.chas_dost) return alert("🕒 Вкажіть час доставки");
-        if (isNaN(data.suma) || data.suma <= 0) return alert("💰 Вкажіть коректну суму");
-
+        const data = getFormDataFromInputs('');
+        if (!validateFormData(data)) return;
+        console.log("📤 Дані перед POST:", JSON.stringify(data));
         fetch(apiUrl, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(data)
-        })
-        .then(res => res.json())
-        .then(() => {
-            ["tel", "adresa", "suma", "chas_dost", "coment", "vidpov"].forEach(id => document.getElementById(id).value = "");
-            document.getElementById("stat").value = "false";
-            loadData();
-        });
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data)
+    })
+    .then(res => {
+        console.log("POST status:", res.status);
+        return res.json();
+    })
+    .then(() => {
+        ["tel", "adresa", "suma", "chas_dost", "coment", "vidpov"].forEach(id => document.getElementById(id).value = "");
+        document.getElementById("stat").value = "false";
+        loadData();
+    })
+    .catch(err => alert("❌ POST error: " + err.message));
+
     }
 
     function deleteZamovl(id) {
@@ -177,16 +231,59 @@
             .then(() => loadData());
     }
 
-    function editZamovl(id) {
-        const newTel = prompt("Новий номер телефону (у форматі +380...)?", "");
-        if (!newTel) return;
-        const tel = cleanPhone(newTel);
-        if (!tel.match(/^\+38\d{10}$/)) return alert("❌ Формат телефону некоректний");
+    function getFormDataFromInputs(prefix = '') {
+        return {
+            tel: cleanPhone(document.getElementById(prefix + "tel").value.trim()),
+            adresa: document.getElementById(prefix + "adresa").value.trim(),
+            suma: parseFloat(document.getElementById(prefix + "suma").value),
+            chas_dost: document.getElementById(prefix + "chas_dost").value,
+            coment: document.getElementById(prefix + "coment").value.trim(),
+            vidpov: document.getElementById(prefix + "vidpov").value.trim(),
+            stat: document.getElementById(prefix + "stat").value === "true"
+        };
+    }
+
+    function validateFormData(data) {
+        if (!data.tel.match(/^\+380\d{9}$/)) return alert("📞 Невірний номер телефону");
+        if (!data.adresa) return alert("📍 Вкажіть адресу");
+        const rawDate = data.chas_dost;
+        if (!rawDate || !rawDate.includes("T")) return alert("🕒 Невірний час доставки");
+        if (isNaN(data.suma) || data.suma <= 0) return alert("💰 Вкажіть коректну суму");
+        return true;
+    }
+
+    function showEditRow(id, item) {
+        const row = document.querySelector(`#zamovlTableBody tr:nth-child(${id + 1})`);
+        const editRow = document.createElement("tr");
+        editRow.innerHTML =`
+            <td>${id}</td>
+            <td>${new Date(item.chas_stvor).toLocaleString()}</td>
+            <td><input type="datetime-local" id="edit_chas_dost" class="form-control form-control-sm" value="${item.chas_dost.replace('Z', '')}"></td>
+            <td>
+                <select id="edit_stat" class="form-select form-select-sm">
+                    <option value="false" ${!item.stat ? 'selected' : ''}>Незавершено</option>
+                    <option value="true" ${item.stat ? 'selected' : ''}>Завершено</option>
+                </select>
+            </td>
+            <td><input type="text" id="edit_tel" class="form-control form-control-sm" value="${item.tel}"></td>
+            <td><input type="text" id="edit_adresa" class="form-control form-control-sm" value="${item.adresa}"></td>
+            <td><input type="text" id="edit_vidpov" class="form-control form-control-sm" value="${item.vidpov}"></td>
+            <td><input type="number" id="edit_suma" class="form-control form-control-sm" value="${item.suma}" step="0.01" min="0"></td>
+            <td><input type="text" id="edit_coment" class="form-control form-control-sm" value="${item.coment || ''}"></td>
+            <td class="action-cell"><button class="btn btn-sm btn-success" onclick="saveEdit(${id})">✔️</button></td>
+        `;
+        row.replaceWith(editRow);
+        applyPhoneMaskTo("#edit_tel");
+    }
+
+    function saveEdit(id) {
+        const data = getFormDataFromInputs("edit_");
+        if (!validateFormData(data)) return;
 
         fetch(apiUrl + id + "/", {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ tel })
+            body: JSON.stringify(data)
         }).then(() => loadData());
     }
 
